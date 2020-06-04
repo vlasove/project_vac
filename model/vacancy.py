@@ -1,5 +1,13 @@
 import sqlite3 
 
+class Vacancy:
+    def __init__(self, search : str, title : str, company : str, salary : int):
+        pass  
+
+
+
+
+
 class VacancyAnalyser:
     def __init__(self, path:str, vacancy:str, calc_avg:bool, calc_std:bool):
         self.__path = path 
@@ -47,7 +55,7 @@ class VacancyAnalyser:
         for v in cur.execute(select_query, (self.__vacancy,)): 
             vacancy_list.append(v[0]) 
 
-        ### your code 
+        self.__avg = sum(vacancy_list) / len(vacancy_list) 
 
         return self.__avg
 
@@ -60,6 +68,9 @@ class VacancyAnalyser:
         for v in cur.execute(select_query, (self.__vacancy,)): 
             vacancy_list.append(v[0]) 
 
-        ### your code 
+        avg = self.average()
+        d = sum([(x - avg)**2 for x in vacancy_list ]) / len(vacancy_list)
+        
+        self.__std = d ** 0.5 
 
         return self.__std
