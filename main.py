@@ -9,7 +9,8 @@ vac = VacancyAnalyser(configs['path'], configs['vacancy'], configs['avg'], confi
 
 for elem in vac.show_total():
     print(elem)
-#print(vac.average(), vac.std())
+
+print(vac.average(), vac.std())
 
 # print(configs)
 
