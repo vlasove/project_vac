@@ -1,8 +1,34 @@
 import sqlite3 
 
 class Vacancy:
-    def __init__(self, search : str, title : str, company : str, salary : int):
-        pass  
+    def __init__(self, path :str, search : str, title : str, company : str, salary : int):
+        self.__path = path 
+        self.__search = search
+        self.__title = title
+        self.__company = company
+        self.__salary = salary 
+
+    def save(self):
+        conn = sqlite3.connect(self.__path)
+        cur = conn.cursor()
+
+        query_insert = 'INSERT INTO vacancys VALUES (NULL, ?, ?, ?, ?)'
+        cur.execute(query_insert, (self.__search, self.__title, self.__company, self.__salary))
+
+        conn.commit()
+        conn.close()
+
+
+    def delete(self):
+        conn = sqlite3.connect(self.__path)
+        cur = conn.cursor()
+
+        query_delete = 'DELETE FROM vacancys WHERE title = ?'
+        cur.execute(query_delete, (self.__title, ))
+
+        conn.commit()
+        conn.close()
+ 
 
 
 
