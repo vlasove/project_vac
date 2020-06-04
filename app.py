@@ -3,6 +3,9 @@ from cli.cli import CLI
 from model.vacancy import VacancyAnalyser
 from model.vacancy import Vacancy
 from model.create_table import create_table
+from connector.connector import Parser
+
+from tqdm import tqdm
 
 
 
@@ -11,8 +14,13 @@ configs = interface.get_result()
 
 create_table(configs['path'])
 
-v1 = Vacancy(configs['path'], configs['vacancy'], "Python Developer2", "Avito2", 150000)
-v1.save()
+p = Parser(configs["vacancy"])
+p.get_vacancys()
+for vac in tqdm(p.get_vacancy_bag()):
+    v1 = Vacancy(configs['path'], configs['vacancy'], vac[0], vac[1], vac[2])
+    v1.save()
+
+
 
 vac = VacancyAnalyser(configs['path'], configs['vacancy'], configs['avg'], configs['std'])
 

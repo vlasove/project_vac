@@ -13,6 +13,9 @@ class Parser:
         self.__vacancy_bag = []
         self.__converter = {"руб." : 1, "USD" : 72, "EUR" : 81}
 
+    def get_vacancy_bag(self):
+        return self.__vacancy_bag
+
     def __check_connection(self):
         if self.__session.get(self.__base_url, headers=self.headers).status_code == 200:
             return True 
@@ -40,18 +43,26 @@ class Parser:
             return first * 1000 * self.__converter[words_list[-1]]
 
     def get_vacancys(self):
-        if self.__check_connection():
-            soup = BeautifulSoup(self.__session.get(self.__base_url, headers=self.headers).content, "lxml")
-            vacancy_cards = soup.find_all("div", attrs={"data-qa": "vacancy-serp__vacancy"})
+        last_page = self.get_last_page()
+        for page in range(0, last_page + 1):
+            self.__base_url = self.__base_url[:-1] + str(page)
 
-            for vac in vacancy_cards:
-                try:
-                    title = vac.find("a", attrs={"data-qa" : "vacancy-serp__vacancy-title"}).text
-                    company = vac.find("a", attrs = {"data-qa" : "vacancy-serp__vacancy-employer"}).text
-                    salary = vac.find("span", attrs={"data-qa" : "vacancy-serp__vacancy-compensation"}).text 
-                    self.__vacancy_bag.append((title, company, self.__parse_salary(salary)))
-                except:
-                    pass 
+            if self.__check_connection():
+                soup = BeautifulSoup(self.__session.get(self.__base_url, headers=self.headers).content, "lxml")
+                vacancy_cards = soup.find_all("div", attrs={"data-qa": "vacancy-serp__vacancy"})
+
+                for vac in vacancy_cards:
+                    try:
+                        title = vac.find("a", attrs={"data-qa" : "vacancy-serp__vacancy-title"}).text
+                        company = vac.find("a", attrs = {"data-qa" : "vacancy-serp__vacancy-employer"}).text
+                        salary = vac.find("span", attrs={"data-qa" : "vacancy-serp__vacancy-compensation"}).text 
+                        if self.__parse_salary(salary) > 1000000:
+                            pass 
+                        else:
+                            self.__vacancy_bag.append((title, company, self.__parse_salary(salary)))
+                    except:
+                        pass 
+
 
 
 
