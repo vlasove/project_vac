@@ -60,8 +60,9 @@ class VacancyAnalyser:
 
 
         self.__amount = len(vacancy_list)
-        self.__min = min(vacancy_list)[0]
-        self.__max = max(vacancy_list)[0]
+        if len(vacancy_list) != 0:
+            self.__min = min(vacancy_list)[0]
+            self.__max = max(vacancy_list)[0]
 
         conn.close()
 
@@ -80,8 +81,8 @@ class VacancyAnalyser:
         vacancy_list = [] 
         for v in cur.execute(select_query, (self.__vacancy,)): 
             vacancy_list.append(v[0]) 
-
-        self.__avg = sum(vacancy_list) / len(vacancy_list) 
+        if len(vacancy_list) != 0:
+            self.__avg = sum(vacancy_list) / len(vacancy_list) 
 
         return self.__avg
 
@@ -95,8 +96,8 @@ class VacancyAnalyser:
             vacancy_list.append(v[0]) 
 
         avg = self.average()
-        d = sum([(x - avg)**2 for x in vacancy_list ]) / len(vacancy_list)
-        
-        self.__std = d ** 0.5 
+        if len(vacancy_list) != 0:
+            d = sum([(x - avg)**2 for x in vacancy_list ]) / len(vacancy_list)
+            self.__std = d ** 0.5 
 
         return self.__std
