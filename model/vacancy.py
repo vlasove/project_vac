@@ -45,7 +45,7 @@ class VacancyAnalyser:
         select_query = 'SELECT salary FROM vacancys WHERE search = ?'
         vacancy_list = [] 
         for v in cur.execute(select_query, (self.__vacancy,)): 
-            vacancy_list.append(v) 
+            vacancy_list.append(v[0]) 
 
         ### your code 
 
@@ -58,7 +58,7 @@ class VacancyAnalyser:
         select_query = 'SELECT salary FROM vacancys WHERE search = ?'
         vacancy_list = [] 
         for v in cur.execute(select_query, (self.__vacancy,)): 
-            vacancy_list.append(v) 
+            vacancy_list.append(v[0]) 
 
         ### your code 
 
